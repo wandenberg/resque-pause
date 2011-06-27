@@ -1,0 +1,6 @@
+pkg/*
+*.gem
+.bundle
+coverage/*
+.rvmrc
+.project
