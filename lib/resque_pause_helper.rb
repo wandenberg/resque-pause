@@ -13,7 +13,7 @@ module ResquePauseHelper
     end
 
     def enqueue_job(args)
-      Resque.redis.lpush("queue:#{args[:queue]}", Resque.encode(:class => args[:class], :args => args[:args]))
+      Resque.redis.lpush("queue:#{args[:queue]}", Resque.encode(:class => args[:class].to_s, :args => args[:args]))
     end
 
     def dequeue_job(args)
