@@ -34,6 +34,15 @@ Default behaviour...
 * If the queue still paused after this time the job will abort and will be enqueued again with the same arguments.
 
 
+Resque-Web integration
+----------------------
+
+You have to load ResquePause to enable the Pause tab.
+
+```ruby
+    require 'resque_pause'
+```
+
 Customise & Extend
 ==================
 
