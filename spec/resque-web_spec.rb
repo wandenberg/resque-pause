@@ -39,13 +39,13 @@ describe ResquePause::Server do
 
 
   it "should pause a queue" do
-    post "/pause", :queue_name => "queue3"
+    post "/pause", :queue_name => "queue3", :pause => true
 
     ResquePauseHelper.paused?("queue3").should be_true
   end
 
   it "should return a json when pause a queue" do
-    post "/pause", :queue_name => "queue3"
+    post "/pause", :queue_name => "queue3", :pause => true
 
     last_response.headers["Content-Type"].should == "application/json"
     last_response.body.should == { :queue_name => "queue3", :paused => true }.to_json
@@ -53,13 +53,13 @@ describe ResquePause::Server do
 
   it "should unpause a queue" do
     ResquePauseHelper.pause("queue2")
-    post "/unpause", :queue_name => "queue2"
+    post "/pause", :queue_name => "queue2", :pause => false
 
     ResquePauseHelper.paused?("queue2").should be_false
   end
 
   it "should return a json when unpause a queue" do
-    post "/unpause", :queue_name => "queue2"
+    post "/pause", :queue_name => "queue2", :pause => false
 
     last_response.headers["Content-Type"].should == "application/json"
     last_response.body.should == { :queue_name => "queue2", :paused => false }.to_json

@@ -29,15 +29,17 @@ module ResquePause
         end
 
         post '/pause' do
-          ResquePauseHelper.pause(params['queue_name']) unless params['queue_name'].empty?
-          content_type :json
-          encode(:queue_name => params['queue_name'], :paused => true)
-        end
+          pause = params['pause'] == "true"
 
-        post '/unpause' do
-          ResquePauseHelper.unpause(params['queue_name']) unless params['queue_name'].empty?
+          unless params['queue_name'].empty?
+            if pause
+              ResquePauseHelper.pause(params['queue_name'])
+            else
+              ResquePauseHelper.unpause(params['queue_name'])
+            end
+          end
           content_type :json
-          encode(:queue_name => params['queue_name'], :paused => false)
+          encode(:queue_name => params['queue_name'], :paused => pause)
         end
 
         get /pause\/public\/([a-z]+\.[a-z]+)/ do
