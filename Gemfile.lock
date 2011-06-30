@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    resque-pause (0.0.3)
+    resque-pause (0.0.4)
       resque (>= 1.9.10)
 
 GEM
