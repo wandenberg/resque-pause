@@ -40,7 +40,7 @@ Resque-Web integration
 You have to load ResquePause to enable the Pause tab.
 
 ```ruby
-    require 'resque_pause'
+    require 'resque-pause/server'
 ```
 
 Customise & Extend

@@ -67,7 +67,7 @@ describe ResquePause::Server do
 
   it "should return static files" do
     get "/pause/public/pause.js"
-    last_response.body.should == File.read(File.expand_path('../lib/resque_pause/server/public/pause.js', File.dirname(__FILE__)))
+    last_response.body.should == File.read(File.expand_path('../lib/resque-pause/server/public/pause.js', File.dirname(__FILE__)))
   end
 
 end

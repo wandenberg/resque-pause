@@ -1,3 +1,7 @@
+require 'resque'
+require 'resque/server'
+require File.expand_path(File.join('../','resque_pause_helper'), File.dirname(__FILE__))
+
 # Extends Resque Web Based UI.
 # Structure has been borrowed from ResqueScheduler.
 module ResquePause
