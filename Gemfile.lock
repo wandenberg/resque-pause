@@ -65,7 +65,6 @@ PLATFORMS
 
 DEPENDENCIES
   rack-test
-  resque (>= 1.9.10)
   resque-pause!
   rspec (>= 2.3.0)
   ruby-debug

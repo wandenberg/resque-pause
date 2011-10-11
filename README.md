@@ -1,5 +1,8 @@
-Resque Pause
-============
+# Resque Pause [![alt build status][1]][2]
+
+[1]: https://secure.travis-ci.org/wandenberg/resque-pause.png
+[2]: http://travis-ci.org/#!/wandenberg/resque-pause
+
 
 A [Resque][rq] plugin. Requires Resque 1.9.10.
 
