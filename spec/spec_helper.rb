@@ -41,12 +41,15 @@ RSpec.configure do |config|
   # config.mock_with :rr
   config.mock_with :rspec
 
+  config.order = "random"
+
   config.before(:suite) do
-    puts "Starting redis for testing at localhost:9736..."
+    puts '', 'Starting redis for testing at localhost:9736...', ''
+    FileUtils.rm_f('spec/redis-test.pid')
     `redis-server #{File.dirname(File.expand_path(__FILE__))}/redis-test.conf`
     pid = ''
     while pid.empty? do
-      pid = `ps -e -o pid,command | grep [r]edis-test`.split(" ")[0]
+      pid = File.read('spec/redis-test.pid').chomp rescue ''
     end
     Resque.redis = '127.0.0.1:9736'
   end
@@ -57,9 +60,10 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    pid = `ps -e -o pid,command | grep [r]edis-test`.split(" ")[0]
-    puts '', "Killing test redis server..."
-    Process.kill("KILL", pid.to_i)
-    `rm -f #{File.dirname(File.expand_path(__FILE__))}/dump.rdb`
+    pid = File.read('spec/redis-test.pid').chomp rescue ''
+    puts '', '', 'Killing test redis server...'
+    Process.kill('KILL', pid.to_i)
+    FileUtils.rm_f('spec/redis-test.pid')
+    FileUtils.rm_f('spec/dumb.rdb')
   end
 end
