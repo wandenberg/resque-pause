@@ -3,7 +3,7 @@ source "http://rubygems.org"
 # Specify your gem's dependencies in resque-pause.gemspec
 gemspec
 
-gem "rake", "0.8.7"
+gem "rake"
 
 group :test, :development do
   platforms :mri_18 do

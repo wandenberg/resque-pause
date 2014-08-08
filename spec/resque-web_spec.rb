@@ -18,56 +18,56 @@ describe ResquePause::Server do
 
   it "should respond to /pause" do
     get '/pause'
-    last_response.should be_ok
+    expect(last_response).to be_ok
   end
 
   it "should list all registered queues" do
     get '/pause'
-    last_response.body.should include("queue1")
-    last_response.body.should include("queue2")
-    last_response.body.should include("queue3")
+    expect(last_response.body).to include("queue1")
+    expect(last_response.body).to include("queue2")
+    expect(last_response.body).to include("queue3")
   end
 
   it "should check paused queues" do
     ResquePauseHelper.pause("queue2")
 
     get '/pause'
-    last_response.body.should include(%q{<input class="pause" type="checkbox" value="queue1" ></input>})
-    last_response.body.should include(%q{<input class="pause" type="checkbox" value="queue2" checked></input>})
-    last_response.body.should include(%q{<input class="pause" type="checkbox" value="queue3" ></input>})
+    expect(last_response.body).to include(%q{<input class="pause" type="checkbox" value="queue1" ></input>})
+    expect(last_response.body).to include(%q{<input class="pause" type="checkbox" value="queue2" checked></input>})
+    expect(last_response.body).to include(%q{<input class="pause" type="checkbox" value="queue3" ></input>})
   end
 
 
   it "should pause a queue" do
     post "/pause", :queue_name => "queue3", :pause => true
 
-    ResquePauseHelper.paused?("queue3").should be_true
+    expect(ResquePauseHelper.paused?("queue3")).to be_truthy
   end
 
   it "should return a json when pause a queue" do
     post "/pause", :queue_name => "queue3", :pause => true
 
-    last_response.headers["Content-Type"].should == "application/json"
-    last_response.body.should == { :queue_name => "queue3", :paused => true }.to_json
+    expect(last_response.headers["Content-Type"]).to eq("application/json")
+    expect(last_response.body).to eq({ :queue_name => "queue3", :paused => true }.to_json)
   end
 
   it "should unpause a queue" do
     ResquePauseHelper.pause("queue2")
     post "/pause", :queue_name => "queue2", :pause => false
 
-    ResquePauseHelper.paused?("queue2").should be_false
+    expect(ResquePauseHelper.paused?("queue2")).to be_falsey
   end
 
   it "should return a json when unpause a queue" do
     post "/pause", :queue_name => "queue2", :pause => false
 
-    last_response.headers["Content-Type"].should == "application/json"
-    last_response.body.should == { :queue_name => "queue2", :paused => false }.to_json
+    expect(last_response.headers["Content-Type"]).to eq("application/json")
+    expect(last_response.body).to eq({ :queue_name => "queue2", :paused => false }.to_json)
   end
 
   it "should return static files" do
     get "/pause/public/pause.js"
-    last_response.body.should == File.read(File.expand_path('../lib/resque-pause/server/public/pause.js', File.dirname(__FILE__)))
+    expect(last_response.body).to eq(File.read(File.expand_path('../lib/resque-pause/server/public/pause.js', File.dirname(__FILE__))))
   end
 
 end
