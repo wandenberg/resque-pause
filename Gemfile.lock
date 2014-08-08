@@ -69,4 +69,5 @@ DEPENDENCIES
   resque-pause!
   rspec (>= 2.3.0)
   ruby-debug
+  ruby-debug19
   simplecov (>= 0.4.2)
