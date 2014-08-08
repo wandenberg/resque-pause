@@ -54,7 +54,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     Resque.redis.flushall
-    Kernel.stub!(:sleep)
+    allow(Kernel).to receive(:sleep)
   end
 
   config.after(:suite) do
