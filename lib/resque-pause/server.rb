@@ -6,7 +6,6 @@ require File.expand_path(File.join('../','resque_pause_helper'), File.dirname(__
 # Structure has been borrowed from ResqueScheduler.
 module ResquePause
   module Server
-    include Resque::Helpers
 
     def self.erb_path(filename)
       File.join(File.dirname(__FILE__), 'server', 'views', filename)
@@ -43,7 +42,7 @@ module ResquePause
             end
           end
           content_type :json
-          encode(:queue_name => params['queue_name'], :paused => pause)
+          ResquePauseHelper.encode(:queue_name => params['queue_name'], :paused => pause)
         end
 
         get /pause\/public\/([a-z]+\.[a-z]+)/ do

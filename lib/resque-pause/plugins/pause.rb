@@ -1,7 +1,6 @@
 module Resque
   module Plugins
     module Pause
-      include Resque::Helpers
       PAUSE_CHECK_INTERVAL = 10 #seconds to wait when queue is paused
 
       def before_perform_pause(*args)
