@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     resque-pause (0.0.4)
+      multi_json (~> 1.0)
       resque (>= 1.9.10)
 
 GEM
