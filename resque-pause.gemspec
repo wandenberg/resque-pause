@@ -26,6 +26,7 @@ You can use this functionality to do some maintenance whithout kill workers, for
   s.has_rdoc      = false
 
   s.add_dependency('resque', '>= 1.9.10')
+  s.add_dependency('multi_json', '~> 1.0')
 
   s.add_development_dependency('rspec', '>= 2.3.0')
   s.add_development_dependency('rack-test')
