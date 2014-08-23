@@ -26,10 +26,6 @@ module ResquePauseHelper
       Resque.redis.lpush("queue:#{args[:queue]}", ResquePauseHelper.encode(:class => args[:class].to_s, :args => args[:args]))
     end
 
-    def dequeue_job(args)
-      Resque.redis.lpop("queue:#{args[:queue]}")
-    end
-
     def check_paused(args)
       if ResquePauseHelper.paused?(args[:queue])
         enqueue_job(args)

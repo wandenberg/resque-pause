@@ -78,24 +78,6 @@ describe ResquePauseHelper do
     end
   end
 
-  context "when dequeue a job" do
-    it "should not get error when queue is empty" do
-      Resque.redis.del "queue:queue1"
-
-      expect { subject.dequeue_job(:queue => "queue1") }.to_not raise_error
-
-      expect(subject.dequeue_job(:queue => "queue1")).to be_nil
-    end
-
-    it "should get the job on beginning of a queue" do
-      Resque.redis.lpush "queue:queue1", {:class => PauseJob, :args => [1, 2]}.to_json
-      Resque.redis.lpush "queue:queue1", {:class => PauseJob, :args => [1]}.to_json
-
-      job = subject.dequeue_job(:queue => "queue1")
-      expect(job).to eq({:class => PauseJob, :args => [1]}.to_json)
-    end
-  end
-
   context "when checking if queue is paused" do
     it "should check if queue is paused" do
       expect(subject).to receive(:paused?).with("queue1")
