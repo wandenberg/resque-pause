@@ -32,11 +32,22 @@ module ResquePause
         mime_type :json, 'application/json'
 
         get '/pause' do
-          erb File.read(ResquePause::Server.erb_path('pause.erb'))
+          case request.accept.first
+          when /json/
+            content_type :json
+            resque.queues.inject({"GLOBAL_PAUSE" => ResquePauseHelper.global_paused?}) do |pause_status, queue|
+              pause_status[queue] = ResquePauseHelper.paused?(queue)
+              pause_status
+            end.to_json
+          else
+            erb File.read(ResquePause::Server.erb_path('pause.erb'))
+          end
         end
 
         post '/pause' do
-          pause = params['pause'] == "true"
+          params.merge!(MultiJson.load(request.body.read.to_s)) if /json/ =~ request.content_type
+
+          pause = params['pause'].to_s == "true"
 
           unless params['queue_name'].empty?
             case params['queue_name']
