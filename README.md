@@ -31,9 +31,44 @@ class UpdateNetworkGraph
 end
 ```
 
-Pause is achieved by storing a pause/queue key in Redis.
+### Pausing Individual Queues
 
-Default behaviour...
+To pause the queue:
+
+```ruby
+ResquePauseHelper.pause(:network_graph)
+```
+
+Then, to unpause the queue:
+
+```ruby
+ResquePauseHelper.unpause(:network_graph)
+```
+
+Single-queue pause is achieved by storing a pause/queue key in Redis.
+
+
+### Global Pause
+
+You can also pause all the queues at once.
+
+To switch on a global pause:
+
+```ruby
+ResquePauseHelper.global_pause()
+```
+
+Then, to remove a global pause:
+
+```ruby
+ResquePauseHelper.global_unpause()
+```
+
+This global pause doesn't interact with any pauses on individual queues. That means, switching the global pause on and off should preserve whatever pauses you might have in place before and even during the global pause period.
+
+An anology would be with light switches and circuit breakers. Positioning light switches is like pausing individual queues. Whatever their position before you flip the breaker (impose a global pause). They'll maintain that position after the global pause.
+
+### Default behaviour
 
 * When the job instance try to execute and the queue is paused, the job is paused for a slice of time.
 * If the queue still paused after this time the job will abort and will be enqueued again with the same arguments.

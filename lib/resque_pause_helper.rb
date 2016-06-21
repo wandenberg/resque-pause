@@ -10,8 +10,9 @@ end
 
 module ResquePauseHelper
   class << self
+    GLOBAL_PAUSE_KEY = "pause:all"
     def paused?(queue)
-      !Resque.redis.get("pause:queue:#{queue}").nil?
+      !Resque.redis.mget("pause:queue:#{queue}", GLOBAL_PAUSE_KEY).all?(&:nil?)
     end
 
     def pause(queue)
@@ -20,6 +21,14 @@ module ResquePauseHelper
 
     def unpause(queue)
       Resque.redis.del "pause:queue:#{queue}"
+    end
+
+    def global_pause()
+      Resque.redis.set GLOBAL_PAUSE_KEY, true
+    end
+
+    def global_unpause()
+      Resque.redis.del GLOBAL_PAUSE_KEY
     end
 
     def enqueue_job(args)

@@ -46,6 +46,83 @@ describe Resque::Plugins::Pause do
     expect(Resque.reserve('test')).to be_nil
   end
 
+  it "should execute the job when queue is unpaused after being paused" do
+    Resque.enqueue(PauseJob)
+    expect(Resque.size('test')).to eq(1)
+
+    job = Resque.reserve('test')
+    ResquePauseHelper.pause('test')
+    job.perform
+    expect(Resque.size('test')).to eq(1)
+
+    ResquePauseHelper.unpause('test')
+
+    expect(PauseJob).to receive(:perform)
+    Resque.reserve('test').perform
+    expect(Resque.size('test')).to eq(0)
+  end
+
+  it "should not reserve the job when global pause is on" do
+    Resque.enqueue(PauseJob)
+    ResquePauseHelper.global_pause()
+    expect(PauseJob).not_to receive(:perform)
+
+    expect(Resque.reserve('test')).to be_nil
+  end
+
+  it "should not execute the job when the global pause is on" do
+    Resque.enqueue(PauseJob)
+    expect(Resque.size('test')).to eq(1)
+
+    job = Resque.reserve('test')
+    ResquePauseHelper.global_pause()
+    job.perform
+
+    expect(Resque.size('test')).to eq(1)
+  end
+
+  it "should execute the job when the global pause was switched on and then off" do
+    Resque.enqueue(PauseJob)
+    expect(Resque.size('test')).to eq(1)
+
+    job = Resque.reserve('test')
+    ResquePauseHelper.global_pause()
+    job.perform
+    expect(Resque.size('test')).to eq(1)
+
+    ResquePauseHelper.global_unpause()
+
+    expect(PauseJob).to receive(:perform)
+    Resque.reserve('test').perform
+    expect(Resque.size('test')).to eq(0)
+  end
+
+  it "should not execute the job when the queue is paused, and then the global pause is switched on and then back off" do
+    Resque.enqueue(PauseJob)
+    expect(Resque.size('test')).to eq(1)
+
+    job = Resque.reserve('test')
+    ResquePauseHelper.pause('test')
+
+    ResquePauseHelper.global_pause()
+    ResquePauseHelper.global_unpause()
+
+    job.perform
+
+    expect(Resque.size('test')).to eq(1)
+  end
+
+  it "should not reserve the job when the queue is paused, and then the global pause is switched on and then back off" do
+    Resque.enqueue(PauseJob)
+    ResquePauseHelper.pause('test')
+    ResquePauseHelper.global_pause()
+    ResquePauseHelper.global_unpause()
+
+    expect(PauseJob).not_to receive(:perform)
+
+    expect(Resque.reserve('test')).to be_nil
+  end
+
   it "should not change queued jobs when queue is paused" do
     Resque.enqueue(PauseJob, 1)
     Resque.enqueue(PauseJob, 2)
