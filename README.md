@@ -108,6 +108,16 @@ class UpdateNetworkGraph
 end
 ````
 
+### Global pause Redis key
+
+To change the exact key that will be put into redis to signal a global pause, use the `@global_pause_token` config option
+
+````ruby
+ResquePauseHelper.configure do |config|
+  config.global_pause_token = "my_custom_token"
+end
+````
+
 The above modification will ensure the job will wait for 30 seconds before abort.
 
 
