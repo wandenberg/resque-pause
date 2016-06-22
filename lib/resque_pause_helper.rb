@@ -1,4 +1,5 @@
 require 'multi_json'
+require 'configuration'
 
 # OkJson won't work because it doesn't serialize symbols
 # in the same way yajl and json do.
@@ -10,11 +11,24 @@ end
 
 module ResquePauseHelper
   class << self
-    GLOBAL_PAUSE_TOKEN = "pause:all"
+
+    def configure(&block)
+      yield(configuration)
+      configuration
+    end
+
+    def configuration
+      @configuration ||= Configuration.new
+    end
+
+    def reset_configuration!
+      @configuration = nil
+    end
+
     def paused?(queue)
       ![
           Resque.redis.get("pause:queue:#{queue}"),
-          Resque.redis.get(GLOBAL_PAUSE_TOKEN)
+          Resque.redis.get(ResquePauseHelper.configuration.global_pause_token)
       ].all?(&:nil?)
     end
 
@@ -27,11 +41,11 @@ module ResquePauseHelper
     end
 
     def global_pause_on()
-      Resque.redis.set GLOBAL_PAUSE_TOKEN, true
+      Resque.redis.set ResquePauseHelper.configuration.global_pause_token, true
     end
 
     def global_pause_off()
-      Resque.redis.del GLOBAL_PAUSE_TOKEN
+      Resque.redis.del ResquePauseHelper.configuration.global_pause_token
     end
 
     def enqueue_job(args)
