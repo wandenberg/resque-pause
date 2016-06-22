@@ -150,4 +150,49 @@ describe Resque::Plugins::Pause do
     expect(Resque.size('test')).to eq(0)
   end
 
+  it "should allow the global pause key to be configurable" do
+    pause_key = "my_new_pause_key"
+
+    ResquePauseHelper.global_pause_key = pause_key
+
+    Resque.enqueue(PauseJob)
+    ResquePauseHelper.global_pause()
+
+    expect(Resque.redis.get(pause_key)).not_to be_nil
+  end
+
+  it "should still handle global pauses with a client-configured key" do
+    pause_key = "my_new_pause_key"
+
+    ResquePauseHelper.global_pause_key = pause_key
+
+    Resque.enqueue(PauseJob)
+    expect(Resque.size('test')).to eq(1)
+
+    job = Resque.reserve('test')
+    ResquePauseHelper.global_pause()
+    job.perform
+
+    expect(Resque.size('test')).to eq(1)
+  end
+
+  it "should still handle switching global pauses back off with a client-configured key" do
+    pause_key = "my_new_pause_key"
+
+    ResquePauseHelper.global_pause_key = pause_key
+
+    Resque.enqueue(PauseJob)
+    expect(Resque.size('test')).to eq(1)
+
+    job = Resque.reserve('test')
+    ResquePauseHelper.global_pause()
+    job.perform
+    expect(Resque.size('test')).to eq(1)
+
+    ResquePauseHelper.global_unpause()
+
+    expect(PauseJob).to receive(:perform)
+    Resque.reserve('test').perform
+    expect(Resque.size('test')).to eq(0)
+  end
 end

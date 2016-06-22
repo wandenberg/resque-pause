@@ -10,9 +10,10 @@ end
 
 module ResquePauseHelper
   class << self
-    GLOBAL_PAUSE_KEY = "pause:all"
+    DEFAULT_GLOBAL_PAUSE_KEY = "pause:all"
+
     def paused?(queue)
-      !Resque.redis.mget("pause:queue:#{queue}", GLOBAL_PAUSE_KEY).all?(&:nil?)
+      !Resque.redis.mget("pause:queue:#{queue}", global_pause_key).all?(&:nil?)
     end
 
     def pause(queue)
@@ -24,11 +25,11 @@ module ResquePauseHelper
     end
 
     def global_pause()
-      Resque.redis.set GLOBAL_PAUSE_KEY, true
+      Resque.redis.set global_pause_key, true
     end
 
     def global_unpause()
-      Resque.redis.del GLOBAL_PAUSE_KEY
+      Resque.redis.del global_pause_key
     end
 
     def enqueue_job(args)
@@ -49,6 +50,14 @@ module ResquePauseHelper
       else
         MultiJson.encode object
       end
+    end
+
+    def global_pause_key=(key)
+      @global_pause_key = key
+    end
+
+    def global_pause_key
+      @global_pause_key ||= DEFAULT_GLOBAL_PAUSE_KEY
     end
   end
 end

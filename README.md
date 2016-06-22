@@ -109,6 +109,13 @@ end
 
 The above modification will ensure the job will wait for 30 seconds before abort.
 
+### Global pause Redis key
+
+To change the exact key that will be put into redis to signal a global pause, use the `global_pause_key` config
+
+````ruby
+ResquePauseHelper.global_pause_key = "my_custom_key"
+````
 
 Install
 =======
