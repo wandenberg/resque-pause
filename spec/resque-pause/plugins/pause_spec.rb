@@ -195,4 +195,12 @@ describe Resque::Plugins::Pause do
     Resque.reserve('test').perform
     expect(Resque.size('test')).to eq(0)
   end
+
+  it "should indicate whether the global pause is on" do
+    expect(ResquePauseHelper.global_paused?).to be false
+    ResquePauseHelper.global_pause()
+    expect(ResquePauseHelper.global_paused?).to be true
+    ResquePauseHelper.global_unpause()
+    expect(ResquePauseHelper.global_paused?).to be false
+  end
 end

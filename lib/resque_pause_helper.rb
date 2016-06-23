@@ -32,6 +32,10 @@ module ResquePauseHelper
       Resque.redis.del global_pause_key
     end
 
+    def global_paused?()
+      !!Resque.redis.get(global_pause_key)
+    end
+
     def enqueue_job(args)
       Resque.redis.lpush("queue:#{args[:queue]}", ResquePauseHelper.encode(:class => args[:class].to_s, :args => args[:args]))
     end
