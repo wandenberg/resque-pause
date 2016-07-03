@@ -4,3 +4,6 @@ pkg/*
 coverage/*
 .rvmrc
 .project
+spec/dump.rdb
+spec/stdout
+vendor/*
