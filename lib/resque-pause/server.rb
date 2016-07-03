@@ -23,6 +23,10 @@ module ResquePause
           def paused?(queue)
             ResquePauseHelper.paused?(queue)
           end
+
+          def global_paused?
+            ResquePauseHelper.global_paused?
+          end
         end
 
         mime_type :json, 'application/json'
@@ -35,10 +39,19 @@ module ResquePause
           pause = params['pause'] == "true"
 
           unless params['queue_name'].empty?
-            if pause
-              ResquePauseHelper.pause(params['queue_name'])
+            case params['queue_name']
+            when "GLOBAL_PAUSE"
+              if pause
+                ResquePauseHelper.global_pause
+              else
+                ResquePauseHelper.global_unpause
+              end
             else
-              ResquePauseHelper.unpause(params['queue_name'])
+              if pause
+                ResquePauseHelper.pause(params['queue_name'])
+              else
+                ResquePauseHelper.unpause(params['queue_name'])
+              end
             end
           end
           content_type :json

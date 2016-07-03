@@ -15,4 +15,10 @@
     <td class='size'><%= resque.size queue %></td>
   </tr>
   <% end %>
+  <tr><td class='queue'>&nbsp;</td><td class='status'></td><td class='size'></td></tr>
+  <tr>
+    <td class='queue'><b><i>GLOBAL PAUSE</i></b></td>
+    <td class='status'><input class="pause" type="checkbox" value="GLOBAL_PAUSE" <%= "checked" if global_paused? %>></input></td>
+    <td class='size'>-</td>
+  </tr>
 </table>
