@@ -69,7 +69,7 @@ module ResquePause
           ResquePauseHelper.encode(:queue_name => params['queue_name'], :paused => pause)
         end
 
-        get /pause\/public\/([a-z]+\.[a-z]+)/ do
+        get %r{/pause/public/([a-z]+\.[a-z]+)} do
           send_file ResquePause::Server.public_path(params[:captures].first)
         end
       end
