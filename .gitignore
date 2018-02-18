@@ -7,3 +7,4 @@ coverage/*
 spec/dump.rdb
 spec/stdout
 vendor/*
+Gemfile.lock
