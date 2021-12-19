@@ -31,6 +31,8 @@ Dir[File.expand_path('support/**/*.rb', File.dirname(__FILE__))].each { |f| requ
 # Requires lib.
 Dir[File.expand_path('../lib/**/*.rb', File.dirname(__FILE__))].each { |f| require f }
 
+ENV['REDIS_URL'] = 'redis://127.0.0.1:9736'
+
 RSpec.configure do |config|
   # == Mock Framework
   #
@@ -51,11 +53,11 @@ RSpec.configure do |config|
     while pid.empty? do
       pid = File.read('spec/redis-test.pid').chomp rescue ''
     end
-    Resque.redis = '127.0.0.1:9736'
+    Resque.redis = ENV['REDIS_URL']
   end
 
   config.before(:each) do
-    Resque.redis.flushall
+    Redis.current.flushall
     allow(Kernel).to receive(:sleep)
   end
 

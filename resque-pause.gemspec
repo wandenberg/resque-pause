@@ -26,6 +26,7 @@ You can use this functionality to do some maintenance whithout kill workers, for
   s.add_dependency('multi_json', '~> 1.0')
 
   s.add_development_dependency('rspec', '>= 2.3.0')
+  s.add_development_dependency('rack', '>= 2.1.4')
   s.add_development_dependency('rack-test')
   s.add_development_dependency('simplecov', '>= 0.4.2')
 

@@ -14,10 +14,10 @@ describe Resque::Plugins::Pause do
   end
 
   it "should use at least resque version 1.9.10" do
-    major, minor, patch = Resque::Version.split('.')
-    expect(major.to_i).to eq(1)
-    expect(minor.to_i).to be >= 9
-    expect(patch.to_i).to be >= 10 if minor.to_i  == 9
+    major, minor, patch = (Resque.const_defined?('Version') ? Resque::Version : Resque::VERSION).split('.')
+    expect(major.to_i).to be >= 1
+    expect(minor.to_i).to be >= (major.to_i == 1 ? 9 : 0)
+    expect(patch.to_i).to be >= (major.to_i == 1 && minor.to_i == 9 ? 10 : 0)
   end
 
   it "should execute the job when queue is not paused" do
