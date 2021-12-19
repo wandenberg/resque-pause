@@ -17,13 +17,10 @@ The job finish the process it are doing and don't get a new task to do,
 until the queue is released.
 You can use this functionality to do some maintenance whithout kill workers, for example.}
 
-  s.rubyforge_project = "resque-pause"
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  s.has_rdoc      = false
 
   s.add_dependency('resque', '>= 1.9.10')
   s.add_dependency('multi_json', '~> 1.0')
